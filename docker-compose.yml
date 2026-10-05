@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: patri-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: patri
+      POSTGRES_PASSWORD: patri
+      POSTGRES_DB: patri
+    ports:
+      # Só a própria máquina alcança o banco; ele não fica exposto na rede.
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - patri-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U patri -d patri']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  patri-data:

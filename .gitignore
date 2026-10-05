@@ -1,0 +1,13 @@
+node_modules
+dist
+server/dist
+server/uploads/*
+!server/uploads/.gitkeep
+.env
+*.local
+.DS_Store
+
+# Servidor local: dados e registros desta máquina
+server/.patri-servico.json
+server/backups/
+server/logs/

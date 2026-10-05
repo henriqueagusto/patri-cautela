@@ -1,0 +1,210 @@
+/* =============================================================================
+   PATRI — Layout (§8)
+   ============================================================================= */
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+/* --- Sidebar (desktop, ≥768px) ------------------------------------------ */
+
+.sidebar {
+  display: none;
+  flex-direction: column;
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background-color: var(--color-bg-sunken);
+  border-right: 1px solid var(--color-border-subtle);
+  padding: var(--space-5) var(--space-3);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+.sidebar__mark {
+  display: grid;
+  place-items: center;
+  width: var(--size-brand-mark);
+  height: var(--size-brand-mark);
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-text);
+  flex-shrink: 0;
+}
+
+.sidebar__wordmark {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+}
+
+.sidebar__footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-inline);
+  height: var(--size-nav-item);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-colors);
+}
+
+.nav-item:hover {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.nav-item--active {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-text);
+}
+
+.nav-item--active:hover {
+  background-color: var(--color-accent-bg-hover);
+  color: var(--color-accent-text);
+}
+
+/* Barra de 2px indicando a página atual (§8.1). */
+.nav-item--active::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--space-3) * -1 + 2px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: var(--size-active-bar);
+  border-radius: var(--radius-full);
+  background-color: var(--color-accent);
+}
+
+.nav-item__count {
+  margin-left: auto;
+  font-size: var(--font-size-micro);
+  font-variant-numeric: var(--font-numeric-tabular);
+  color: var(--color-text-tertiary);
+}
+
+.nav-item--active .nav-item__count {
+  color: var(--color-accent-text);
+}
+
+/* --- Área de conteúdo --------------------------------------------------- */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding-block: var(--space-8) var(--space-6);
+}
+
+.page-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.section {
+  margin-bottom: var(--gap-section);
+}
+
+.section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* --- Navegação inferior (mobile, <768px) -------------------------------- */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background-color: var(--color-bg-sunken);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.bottom-nav__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--touch-target-min);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-micro);
+  font-weight: var(--font-weight-medium);
+  transition: color var(--duration-instant) var(--ease-standard);
+}
+
+.bottom-nav__item--active {
+  color: var(--color-accent-text);
+}
+
+/* --- Breakpoints (§8.3) -------------------------------------------------- */
+
+@media (min-width: 768px) {
+  .sidebar {
+    display: flex;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  .main {
+    padding-bottom: var(--space-16);
+  }
+}

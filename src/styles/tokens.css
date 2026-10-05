@@ -1,0 +1,457 @@
+/* =============================================================================
+   PATRI — Design Tokens · Direção Editorial
+   -----------------------------------------------------------------------------
+   Papel quente, tinta preta, blocos de cor pastel e um violeta elétrico para
+   interação. Contornos pretos e sombra deslocada ("sticker") dão o caráter.
+
+   Regras:
+   - Nunca escrever cor, espaçamento, raio ou duração literal em componente.
+   - Se o valor não existe aqui, crie o token antes, com nome semântico.
+   - Componentes usam só tokens semânticos; os primitivos existem para compô-los.
+
+   Ver docs/PATRI-design.md para a especificação de uso.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1. PRIMITIVOS
+   -------------------------------------------------------------------------- */
+:root {
+  /* Papel e tinta */
+  --paper-100: #fbfaf6;
+  --paper-200: #f4f1ea; /* fundo da aplicação */
+  --paper-300: #ece8df;
+  --paper-400: #e2ddd1;
+  --paper-500: #d4cec0;
+  --ink-900: #141414; /* texto e contornos */
+  --ink-700: #3d3a35;
+  --ink-500: #6b665c;
+  --ink-400: #8a8579;
+  --ink-300: #aaa597;
+  --white: #ffffff;
+
+  /* Violeta elétrico — interação */
+  --violet-700: #3f24d6;
+  --violet-600: #4b30f0;
+  --violet-500: #5b3fff;
+  --violet-300: #b8a6ff;
+  --violet-100: #ece7ff;
+
+  /* Blocos pastel — superfícies de destaque */
+  --mint: #c7f0d8;
+  --peach: #ffd6c2;
+  --lavender: #d9ccff;
+  --butter: #ffe9a8;
+  --sky: #cde7ff;
+  --marker: #ffd166; /* marca-texto */
+
+  /* Status — tons escuros legíveis sobre papel */
+  --green-700: #1b7a50;
+  --green-100: #d7f5e6;
+  --amber-700: #9a5a00;
+  --amber-100: #ffebc2;
+  --red-600: #d6334a;
+  --red-700: #b3263b;
+  --red-100: #ffe0e4;
+
+  --ink-rgb: 20 20 20;
+  --violet-500-rgb: 91 63 255;
+  --white-rgb: 255 255 255;
+}
+
+/* -----------------------------------------------------------------------------
+   2. SUPERFÍCIES
+   -------------------------------------------------------------------------- */
+:root {
+  --color-bg: var(--paper-200);
+  --color-bg-sunken: var(--paper-300);
+  --color-surface: var(--white);
+  --color-surface-elevated: var(--paper-100);
+  --color-surface-raised: var(--paper-300);
+  --color-surface-field: var(--white);
+  --color-surface-overlay: rgb(var(--ink-rgb) / 0.32);
+  --color-surface-skeleton: var(--paper-300);
+  --color-surface-photo: var(--paper-300);
+
+  --color-border-subtle: var(--paper-400);
+  --color-border: var(--paper-500);
+  --color-border-strong: var(--ink-900);
+
+  /* Contorno "sticker" dos elementos principais */
+  --color-ink: var(--ink-900);
+  --border-ink: 2px solid var(--ink-900);
+
+  --color-text: var(--ink-900);
+  --color-text-secondary: var(--ink-700);
+  --color-text-tertiary: var(--ink-500);
+  --color-text-disabled: var(--ink-300);
+  --color-text-inverse: var(--white);
+
+  /* Destaques em bloco */
+  --color-block-mint: var(--mint);
+  --color-block-peach: var(--peach);
+  --color-block-lavender: var(--lavender);
+  --color-block-butter: var(--butter);
+  --color-block-sky: var(--sky);
+  --color-marker: var(--marker);
+}
+
+/* -----------------------------------------------------------------------------
+   3. AÇÃO E IDENTIDADE
+   -------------------------------------------------------------------------- */
+:root {
+  --color-accent: var(--violet-500);
+  --color-accent-hover: var(--violet-600);
+  --color-accent-active: var(--violet-700);
+  --color-accent-disabled: var(--violet-300);
+  --color-on-accent: var(--white); /* branco sobre violeta: 6.4:1 */
+
+  --color-accent-text: var(--violet-600); /* links: 6.9:1 sobre o papel */
+  --color-accent-text-hover: var(--violet-700);
+
+  --color-accent-bg: var(--violet-100);
+  --color-accent-bg-hover: var(--lavender);
+  --color-accent-border: var(--violet-300);
+  --color-accent-glow: rgb(var(--violet-500-rgb) / 0.22);
+
+  --color-focus-ring: var(--violet-500);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring: var(--focus-ring-width) solid var(--color-focus-ring);
+}
+
+/* -----------------------------------------------------------------------------
+   4. STATUS
+   Quatro tratamentos. Mapeamento completo em docs/PATRI-design.md §4.4.
+   -------------------------------------------------------------------------- */
+:root {
+  --color-success: var(--green-700);
+  --color-success-solid: var(--green-700);
+  --color-success-bg: var(--green-100);
+  --color-success-border: var(--green-700);
+
+  --color-warning: var(--amber-700);
+  --color-warning-solid: var(--amber-700);
+  --color-warning-bg: var(--amber-100);
+  --color-warning-border: var(--amber-700);
+
+  --color-danger: var(--red-600);
+  --color-danger-solid: var(--red-600);
+  --color-danger-bg: var(--red-100);
+  --color-danger-border: var(--red-600);
+  --color-on-danger: var(--white);
+
+  --color-neutral: var(--ink-700);
+  --color-neutral-bg: var(--paper-300);
+  --color-neutral-border: var(--ink-400);
+
+  --color-muted: var(--ink-500);
+  --color-muted-bg: var(--paper-200);
+  --color-muted-border: var(--paper-500);
+}
+
+/* -----------------------------------------------------------------------------
+   5. TIPOGRAFIA
+   Bricolage Grotesque para títulos (caráter editorial, com o eixo óptico
+   ajustando o desenho ao tamanho) e IBM Plex Sans para texto e dados, com
+   numerais tabulares — o PR é dado central do produto.
+   -------------------------------------------------------------------------- */
+:root {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", var(--font-sans);
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 800; /* só em título de exibição */
+
+  /* Escala — passo ~1.2. Base 15px para densidade média. */
+  --font-size-micro: 0.6875rem; /* 11px — indicador, contador, unidade */
+  --font-size-caption: 0.75rem; /* 12px — label, timestamp, badge */
+  --font-size-sm: 0.8125rem; /* 13px — dado secundário, PR em card, tabela */
+  --font-size-base: 0.9375rem; /* 15px — corpo, input, botão, item de menu */
+  --font-size-lg: 1.0625rem; /* 17px — nome do equipamento em card/linha */
+  --font-size-xl: 1.25rem; /* 20px — título de seção */
+  --font-size-2xl: 1.875rem; /* 30px — título de página */
+  --font-size-3xl: 2.25rem; /* 36px — nome do equipamento na ficha */
+  --font-size-display: 3.5rem; /* 56px — "Encontre um equipamento" (Home) */
+
+  --line-height-tight: 1.02; /* display e títulos grandes */
+  --line-height-snug: 1.3; /* títulos médios, nomes */
+  --line-height-normal: 1.5; /* corpo */
+  --line-height-relaxed: 1.6; /* parágrafos longos, observações */
+
+  --letter-spacing-tight: -0.03em; /* display, 2xl/3xl */
+  --letter-spacing-snug: -0.01em; /* corpo e UI — compensa a largura do Plex */
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.04em; /* uso restrito: micro labels em caixa alta */
+
+  /* Números de patrimônio, série, datas em coluna e contadores. */
+  --font-numeric-tabular: tabular-nums;
+  --max-line-length: 72ch;
+}
+
+/* -----------------------------------------------------------------------------
+   6. ESPAÇAMENTO — escala de 4px
+   -------------------------------------------------------------------------- */
+:root {
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0-5: 0.125rem; /* 2  */
+  --space-1: 0.25rem; /* 4  */
+  --space-1-5: 0.375rem; /* 6  */
+  --space-2: 0.5rem; /* 8  */
+  --space-3: 0.75rem; /* 12 */
+  --space-4: 1rem; /* 16 */
+  --space-5: 1.25rem; /* 20 */
+  --space-6: 1.5rem; /* 24 */
+  --space-8: 2rem; /* 32 */
+  --space-10: 2.5rem; /* 40 */
+  --space-12: 3rem; /* 48 */
+  --space-16: 4rem; /* 64 */
+  --space-20: 5rem; /* 80 */
+  --space-24: 6rem; /* 96 */
+
+  /* Espaçamentos compostos de uso recorrente */
+  --gap-inline: var(--space-2); /* ícone ↔ texto */
+  --gap-field: var(--space-1-5); /* label ↔ campo */
+  --gap-stack: var(--space-3); /* itens de uma lista */
+  --gap-grid: var(--space-4); /* entre cards */
+  --gap-section: var(--space-10); /* entre seções de uma página */
+  --gap-block: var(--space-6); /* entre blocos de um formulário */
+}
+
+/* -----------------------------------------------------------------------------
+   7. FORMA — raio
+   Raio é hierarquia, não decoração: componentes maiores recebem raio maior.
+   Não aplicar o mesmo raio em tudo.
+   -------------------------------------------------------------------------- */
+:root {
+  --radius-xs: 4px; /* checkbox, tag minúscula, barra de skeleton */
+  --radius-sm: 8px; /* badge de status, chip de filtro retangular */
+  --radius-md: 12px; /* botão, input, select, linha de lista, item de menu */
+  --radius-lg: 18px; /* card, painel, bloco de formulário */
+  --radius-xl: 22px; /* busca principal, modal, popover grande */
+  --radius-2xl: 28px; /* bottom sheet (topo) */
+  --radius-full: 9999px; /* ponto de status, avatar, pill, toggle */
+}
+
+/* -----------------------------------------------------------------------------
+   8. ELEVAÇÃO
+   Sombra sólida deslocada, sem desfoque: o elemento "descola" do papel.
+   -------------------------------------------------------------------------- */
+:root {
+  --shadow-none: none;
+  --shadow-offset-sm: 2px 2px 0 var(--ink-900);
+  --shadow-offset: 4px 4px 0 var(--ink-900);
+  --shadow-offset-lg: 6px 6px 0 var(--ink-900);
+  --shadow-sm: var(--shadow-offset-sm);
+  --shadow-md: var(--shadow-offset);
+  --shadow-lg: var(--shadow-offset-lg);
+  --shadow-sheet: 0 -4px 0 var(--ink-900);
+
+  --shadow-focus: 0 0 0 var(--focus-ring-width) var(--color-focus-ring);
+  --shadow-focus-soft: 0 0 0 4px var(--color-accent-glow);
+}
+
+/* -----------------------------------------------------------------------------
+   9. MOVIMENTO
+   Rápido e refinado. Nenhuma animação deve fazer o usuário esperar.
+   Animar apenas opacity, transform, background-color, border-color e box-shadow.
+   -------------------------------------------------------------------------- */
+:root {
+  --duration-instant: 80ms; /* troca de cor em hover de texto/ícone */
+  --duration-fast: 160ms; /* hover e foco de botões, cards, linhas */
+  --duration-base: 240ms; /* favoritar, toast, alternância grid/lista */
+  --duration-slow: 320ms; /* modal, bottom sheet, painel de filtros */
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* entradas — sensação de rapidez */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1); /* saídas */
+  --ease-standard: cubic-bezier(0.2, 0, 0.2, 1); /* mudanças de estado */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* "mola": hover, entrada de card */
+  --duration-enter: 420ms; /* entrada de página e de lista */
+  --stagger: 45ms; /* atraso entre itens de uma lista que entra */
+
+  --transition-colors: color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+  --transition-transform: transform var(--duration-fast) var(--ease-out);
+}
+
+/* -----------------------------------------------------------------------------
+   10. LAYOUT
+   -------------------------------------------------------------------------- */
+:root {
+  --container-max: 1200px; /* largura máxima do conteúdo */
+  --container-narrow: 720px; /* formulários, busca principal, leitura */
+  --container-pad: var(--space-8); /* respiro lateral em desktop */
+  --container-pad-mobile: var(--space-4);
+
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 64px;
+  --bottom-nav-height: 60px;
+  --page-header-height: 64px;
+
+  --control-height-sm: 32px; /* chip, botão compacto, ícone-botão */
+  --control-height-md: 44px; /* botão e input padrão */
+  --control-height-lg: 52px; /* ação primária da ficha, botão mobile */
+  --control-height-search: 64px; /* busca principal da Home (desktop) */
+  --touch-target-min: 44px; /* mínimo tocável em qualquer breakpoint */
+
+  --icon-xs: 14px;
+  --icon-sm: 16px;
+  --icon-md: 18px;
+  --icon-lg: 20px;
+  --icon-xl: 24px;
+  --icon-stroke: 1.5; /* espessura única para todos os ícones lineares */
+
+  /* Card: foto em destaque no topo, faixa de informação logo abaixo. */
+  --photo-aspect-card: 5 / 4;
+  --photo-scrim: var(--white);
+  --photo-scrim-soft: rgb(var(--white-rgb) / 0.9);
+  --photo-scrim-line: var(--ink-900);
+  --radius-card: var(--radius-xl);
+  --category-tint: 34%; /* força da cor da categoria no fundo sem foto */
+  --photo-aspect-detail: 4 / 3;
+  --photo-thumb: 88px; /* miniatura em linha de lista / card mobile */
+  --photo-thumb-sm: 36px; /* miniatura em lista de recentes */
+
+  /* Medidas de componente fixadas pela especificação (§9). */
+  --size-nav-item: 40px;
+  --size-row: 56px;
+  --size-recent-row: 52px;
+  --size-badge: 22px;
+  --size-badge-lg: 28px;
+  --size-dot: 6px; /* ponto dentro do badge */
+  --size-dot-timeline: 8px; /* marcador de evento */
+  --size-brand-mark: 28px;
+  --size-toggle-btn: 30px;
+  --size-active-bar: 20px; /* barra do item ativo da sidebar */
+  --size-step-bar: 3px; /* indicador de passo do fluxo de movimentação */
+  --modal-width: 520px;
+  --modal-width-wide: 720px;
+  --toast-width: 380px;
+  --summary-label-width: 108px;
+
+  /* Colunas da lista: PR | Equipamento | Marca/Modelo | Localização | Situação | ★ */
+  --list-columns: 96px minmax(0, 2.2fr) minmax(0, 1.4fr) minmax(0, 1.6fr) auto auto;
+
+  --z-base: 0;
+  --z-sticky: 100;
+  --z-dropdown: 200;
+  --z-sheet: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+}
+
+/* -----------------------------------------------------------------------------
+   10b. IMPRESSÃO — a folha da cautela é documento, não interface
+   -------------------------------------------------------------------------- */
+:root {
+  --print-paper: #ffffff;
+  --print-ink: #000000;
+  --print-rule: 1px solid var(--print-ink);
+  --print-font: "Times New Roman", Times, "Liberation Serif", serif;
+  --print-sheet-width: 210mm; /* A4: a folha carrega as próprias margens */
+  --print-sheet-height: 297mm;
+}
+
+/* -----------------------------------------------------------------------------
+   11. BREAKPOINTS (referência)
+   Custom properties não funcionam em media queries. Estes valores existem para
+   documentação e devem ser espelhados na configuração do framework de estilo.
+   -------------------------------------------------------------------------- */
+:root {
+  --bp-sm: 480px; /* celular grande */
+  --bp-md: 768px; /* tablet retrato — sidebar vira bottom nav abaixo daqui */
+  --bp-lg: 1024px; /* tablet paisagem / notebook pequeno */
+  --bp-xl: 1280px; /* desktop */
+  --bp-2xl: 1536px; /* desktop grande */
+}
+
+/* -----------------------------------------------------------------------------
+   12. AJUSTES RESPONSIVOS DE TOKEN
+   Reorganizar, não apenas encolher.
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  :root {
+    --font-size-display: 2.5rem; /* 40px */
+    --font-size-3xl: 1.75rem; /* 28px */
+    --font-size-2xl: 1.5rem; /* 24px */
+    --container-pad: var(--container-pad-mobile);
+    --gap-section: var(--space-8);
+    --control-height-search: 52px;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   13. ACESSIBILIDADE — movimento reduzido
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 1ms;
+    --duration-fast: 1ms;
+    --duration-base: 1ms;
+    --duration-slow: 1ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   14. BASE
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+}
+
+html {
+  background-color: var(--color-bg);
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-snug);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+.display,
+.title-page,
+.title-section {
+  font-family: var(--font-display);
+}
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-sm);
+}
+
+.tabular,
+[data-numeric] {
+  font-variant-numeric: var(--font-numeric-tabular);
+}
+
+::selection {
+  background-color: var(--color-marker);
+  color: var(--color-text);
+}

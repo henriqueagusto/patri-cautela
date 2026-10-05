@@ -1,0 +1,173 @@
+
+
+.home__shortcuts {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-4);
+}
+
+/* --- Resultados (§10.2) --------------------------------------------------- */
+
+.results__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
+.results__search {
+  max-width: var(--container-narrow);
+  margin-bottom: var(--space-5);
+}
+
+/* --- Ficha (§10.3) -------------------------------------------------------- */
+
+.detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  height: var(--control-height-sm);
+  margin-top: var(--space-6);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  transition: color var(--duration-instant) var(--ease-standard);
+}
+
+.detail__back:hover {
+  color: var(--color-text);
+}
+
+.detail__title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.detail__name {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.detail__pr {
+  font-size: var(--font-size-base);
+  font-variant-numeric: var(--font-numeric-tabular);
+  color: var(--color-text-secondary);
+}
+
+.detail__badges {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.detail__actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+
+.detail__note {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  max-width: var(--max-line-length);
+}
+
+/* Estado físico · Situação · Responsável (§10.3) */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-5);
+  padding: var(--space-5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.fact__value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+/* Informações patrimoniais — menor destaque que nome/localização/status. */
+.specs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4) var(--space-8);
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+  min-width: 0;
+}
+
+.spec__value {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+/* Barra de ação fixa no rodapé, apenas no mobile (§10.3). */
+.detail__actionbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--z-sticky);
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--container-pad);
+  background-color: var(--color-bg-sunken);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.detail__spacer {
+  height: calc(var(--control-height-lg) + var(--space-6));
+}
+
+/* --- Breakpoints ---------------------------------------------------------- */
+
+@media (min-width: 768px) {
+  .detail__top {
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-8);
+  }
+
+  .detail__actionbar,
+  .detail__spacer {
+    display: none;
+  }
+
+  .specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .detail__top {
+    grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+  }
+
+  .specs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

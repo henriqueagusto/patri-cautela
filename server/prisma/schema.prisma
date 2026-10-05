@@ -1,0 +1,385 @@
+// PATRI — schema do banco
+//
+// - Tudo que era fixo virou cadastro: categorias, locais, pessoas, setores,
+//   motivos de saída. O administrador mantém pela interface.
+// - Pessoa ≠ usuário. Usuário faz login; pessoa é quem pode ficar com um item.
+// - Situação é coluna; condição (atrasado, atenção, não importado) é derivada.
+// - Movimentações guardam "fotografias" em texto (caminho do local, nome da
+//   pessoa) para o histórico sobreviver a renomeações e exclusões.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Papel {
+  USUARIO
+  ADMINISTRADOR
+}
+
+enum Situacao {
+  DISPONIVEL
+  FORA_DA_SALA
+  MANUTENCAO
+  BAIXADO
+}
+
+enum EstadoFisico {
+  OTIMO
+  BOM
+  REGULAR
+  RUIM
+  DANIFICADO
+}
+
+enum TipoMovimentacao {
+  CADASTRO
+  EDICAO
+  MOVIMENTACAO
+  SAIDA
+  EDICAO_SAIDA
+  DEVOLUCAO
+}
+
+/// Configurações gerais. Linha única (id = 1).
+model Settings {
+  id                  Int      @id @default(1)
+  nomeInstituicao     String   @default("PATRI")
+  subtitulo           String   @default("Controle e localização de equipamentos")
+  logo                String?
+  horasRetornoProximo Int      @default(48)
+  prazoPadraoDias     Int      @default(7)
+  regraBaseOficial    String   @default("^72\\d{5}$")
+  exigirResponsavel   Boolean  @default(true)
+
+  // Cautela: cabeçalho institucional impresso (uma linha por nível) e
+  // numeração. O número é por ano ("300/2026") e recomeça em 1 a cada ano
+  // novo. O número inicial vale só para o ano indicado — serve para
+  // continuar de onde o papel parou.
+  cabecalhoCautela     String @default("PRESIDÊNCIA DA REPÚBLICA\nSecretaria Geral - Secretaria de Administração\nDiretoria de Tecnologia\nCoordenação-Geral de Operações e Atendimento a Usuários\nServiço de Áudio e Vídeo")
+  cidadeCautela        String @default("Brasília")
+  numeroInicialCautela Int    @default(300)
+  anoNumeroInicial     Int    @default(2026)
+
+  atualizadoEm        DateTime @updatedAt
+
+  @@map("settings")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  nome         String
+  email        String    @unique
+  senhaHash    String
+  papel        Papel     @default(USUARIO)
+  ativo        Boolean   @default(true)
+  foto         String?
+  telefone     String?
+  preferencias Json      @default("{}")
+  personId     String?   @unique
+  person       Person?   @relation(fields: [personId], references: [id], onDelete: SetNull)
+  ultimoAcesso DateTime?
+  criadoEm     DateTime  @default(now())
+
+  favoritos      Favorite[]
+  acessos        RecentAccess[]
+  movimentacoes  Movement[]
+  itensExcluidos Equipment[]    @relation("ExcluidoPor")
+  auditoria      AuditLog[]
+  cautelas       Cautela[]
+
+  @@map("users")
+}
+
+/// Quem pode ficar com um equipamento. Não precisa ter login.
+model Person {
+  id          String   @id @default(cuid())
+  nome        String
+  /// "PR" da pessoa — o número funcional que vai na cautela.
+  matricula   String?
+  email       String?
+  /// Celular.
+  telefone    String?
+  ramal       String?
+  foto        String?
+  observacoes String?
+  ativo       Boolean  @default(true)
+  setorId     String?
+  setor       Sector?  @relation(fields: [setorId], references: [id], onDelete: SetNull)
+  criadoEm    DateTime @default(now())
+
+  usuario    User?
+  comEle     Equipment[] @relation("Responsavel")
+  movimentos Movement[]
+  cautelas   Cautela[]
+
+  @@index([nome])
+  @@map("people")
+}
+
+/// Setor ou destino para onde itens vão (Auditório, Secretaria, Evento…).
+model Sector {
+  id        String   @id @default(cuid())
+  nome      String   @unique
+  sigla     String?
+  descricao String?
+  ativo     Boolean  @default(true)
+  criadoEm  DateTime @default(now())
+
+  pessoas      Person[]
+  equipamentos Equipment[] @relation("Destino")
+  movimentos   Movement[]
+  cautelas     Cautela[]
+
+  @@map("sectors")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  nome      String   @unique
+  icone     String   @default("package")
+  cor       String   @default("#5B8DEF")
+  descricao String?
+  criadoEm  DateTime @default(now())
+
+  equipamentos Equipment[]
+
+  @@map("categories")
+}
+
+/// Motivo de saída (empréstimo, evento, manutenção…) com prazo padrão.
+model ExitReason {
+  id                 String   @id @default(cuid())
+  nome               String   @unique
+  prazoDias          Int?
+  colocaEmManutencao Boolean  @default(false)
+  ativo              Boolean  @default(true)
+  criadoEm           DateTime @default(now())
+
+  equipamentos Equipment[]
+  movimentos   Movement[]
+  cautelas     Cautela[]
+
+  @@map("exit_reasons")
+}
+
+/// Árvore livre de locais: quantos níveis o administrador quiser.
+model Location {
+  id        String     @id @default(cuid())
+  nome      String
+  tipo      String     @default("Local")
+  descricao String?
+  foto      String?
+  /// Arquivado: sai das listas e dos seletores, mas continua no banco e no
+  /// histórico. Arquivar vale para a subárvore inteira.
+  arquivado Boolean    @default(false)
+  parentId  String?
+  parent    Location?  @relation("Arvore", fields: [parentId], references: [id], onDelete: Restrict)
+  filhos    Location[] @relation("Arvore")
+  criadoEm  DateTime   @default(now())
+
+  equipamentos Equipment[]
+
+  @@index([parentId])
+  @@map("locations")
+}
+
+model Equipment {
+  id             String       @id @default(cuid())
+  pr             String       @unique
+  nome           String
+  material       String
+  marca          String       @default("")
+  modelo         String       @default("")
+  numeroSerie    String?
+  semNumeroSerie Boolean      @default(false)
+  fabricante     String       @default("")
+  situacao       Situacao     @default(DISPONIVEL)
+  estadoFisico   EstadoFisico @default(BOM)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  /// Local de guarda: onde o item fica e para onde volta.
+  locationId String
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Restrict)
+
+  // Saída em andamento — preenchido só enquanto o item está fora.
+  responsavelId   String?
+  responsavel     Person?     @relation("Responsavel", fields: [responsavelId], references: [id], onDelete: SetNull)
+  destinoId       String?
+  destino         Sector?     @relation("Destino", fields: [destinoId], references: [id], onDelete: SetNull)
+  destinoDetalhe  String?
+  motivoId        String?
+  motivo          ExitReason? @relation(fields: [motivoId], references: [id], onDelete: SetNull)
+  saidaEm         DateTime?
+  retornoPrevisto DateTime?
+  saidaObservacao String?
+  cautelaId       String?
+  cautela         Cautela?    @relation("CautelaAtual", fields: [cautelaId], references: [id], onDelete: SetNull)
+
+  importadoDaBaseOficial Boolean   @default(true)
+  foto                   String?
+  observacoes            String?
+  aquisicao              DateTime?
+  valorAquisicao         Decimal?  @db.Decimal(12, 2)
+
+  /// Texto normalizado de todos os campos buscáveis. Reindexado em toda
+  /// escrita que afete nome, local, categoria, responsável ou destino.
+  searchText String @default("")
+
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @updatedAt
+  excluidoEm    DateTime?
+  excluidoPorId String?
+  excluidoPor   User?     @relation("ExcluidoPor", fields: [excluidoPorId], references: [id], onDelete: SetNull)
+
+  historico    Movement[]
+  favoritos    Favorite[]
+  acessos      RecentAccess[]
+  itensCautela CautelaItem[]
+
+  @@index([situacao])
+  @@index([locationId])
+  @@index([categoryId])
+  @@index([responsavelId])
+  @@index([excluidoEm])
+  @@map("equipments")
+}
+
+model Movement {
+  id          String           @id @default(cuid())
+  equipmentId String
+  equipment   Equipment        @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  data        DateTime         @default(now())
+  tipo        TipoMovimentacao
+  descricao   String
+
+  usuarioId   String?
+  usuario     User?   @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+  usuarioNome String
+
+  origemCaminho  String?
+  destinoCaminho String?
+
+  pessoaId   String?
+  pessoa     Person? @relation(fields: [pessoaId], references: [id], onDelete: SetNull)
+  pessoaNome String?
+
+  setorId   String?
+  setor     Sector? @relation(fields: [setorId], references: [id], onDelete: SetNull)
+  setorNome String?
+
+  motivoId   String?
+  motivo     ExitReason? @relation(fields: [motivoId], references: [id], onDelete: SetNull)
+  motivoNome String?
+
+  retornoPrevisto DateTime?
+  observacao      String?
+
+  @@index([equipmentId, data])
+  @@index([data])
+  @@index([pessoaId])
+  @@map("movements")
+}
+
+model Favorite {
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  equipmentId String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  criadoEm    DateTime  @default(now())
+
+  @@id([userId, equipmentId])
+  @@map("favorites")
+}
+
+model RecentAccess {
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  equipmentId String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  acessadoEm  DateTime  @default(now())
+
+  @@id([userId, equipmentId])
+  @@index([userId, acessadoEm])
+  @@map("recent_accesses")
+}
+
+/// Quem alterou o quê nos cadastros e configurações.
+model AuditLog {
+  id          String   @id @default(cuid())
+  data        DateTime @default(now())
+  usuarioId   String?
+  usuario     User?    @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+  usuarioNome String
+  entidade    String
+  entidadeId  String?
+  acao        String
+  resumo      String
+
+  @@index([data])
+  @@map("audit_logs")
+}
+
+/// Cautela de equipamentos: vários itens entregues a uma pessoa, com uma única
+/// data de devolução para todos. Tudo volta junto. Numeração "numero/ano",
+/// recomeçando a cada ano. As assinaturas são no papel; o sistema guarda o
+/// número para localizar a folha no arquivo.
+model Cautela {
+  id     String @id @default(cuid())
+  numero Int
+  ano    Int
+
+  responsavelId String
+  responsavel   Person      @relation(fields: [responsavelId], references: [id], onDelete: Restrict)
+  destinoId     String?
+  destino       Sector?     @relation(fields: [destinoId], references: [id], onDelete: SetNull)
+  destinoDetalhe String?
+  motivoId      String?
+  motivo        ExitReason? @relation(fields: [motivoId], references: [id], onDelete: SetNull)
+
+  tecnicoTransporte String?
+  retornoPrevisto   DateTime?
+  observacao        String?
+
+  criadaEm    DateTime  @default(now())
+  criadaPorId String?
+  criadaPor   User?     @relation(fields: [criadaPorId], references: [id], onDelete: SetNull)
+  fechadaEm   DateTime?
+
+  itens            CautelaItem[]
+  equipamentosAgora Equipment[]  @relation("CautelaAtual")
+
+  @@unique([ano, numero])
+  @@index([fechadaEm])
+  @@index([responsavelId])
+  @@map("cautelas")
+}
+
+/// Item de uma cautela. Guarda cópia dos dados impressos, para a folha
+/// reimpressa sair igual à assinada mesmo que o cadastro mude depois.
+model CautelaItem {
+  id          String    @id @default(cuid())
+  cautelaId   String
+  cautela     Cautela   @relation(fields: [cautelaId], references: [id], onDelete: Cascade)
+  equipmentId String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Restrict)
+
+  pr          String
+  nome        String
+  marca       String
+  modelo      String
+  numeroSerie String?
+
+  devolvidoEm     DateTime?
+  recebidoPor     String?
+  estadoDevolucao EstadoFisico?
+
+  @@unique([cautelaId, equipmentId])
+  @@map("cautela_itens")
+}

@@ -1,0 +1,513 @@
+/* =============================================================================
+   PATRI — Componentes (§9)
+   ============================================================================= */
+
+/* --- Botão (§9.1) -------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-inline);
+  height: var(--control-height-md);
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: var(--transition-colors);
+}
+
+.btn:disabled {
+  cursor: default;
+  color: var(--color-text-disabled);
+}
+
+.btn--primary {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+}
+
+.btn--primary:active:not(:disabled) {
+  background-color: var(--color-accent-active);
+}
+
+.btn--primary:disabled {
+  background-color: var(--color-accent-disabled);
+}
+
+.btn--secondary {
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background-color: var(--color-surface-elevated);
+  border-color: var(--color-border-strong);
+}
+
+.btn--ghost {
+  color: var(--color-text-secondary);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.btn--danger {
+  background-color: var(--color-danger-solid);
+  color: var(--color-on-danger);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background-color: var(--color-danger);
+}
+
+.btn--lg {
+  height: var(--control-height-lg);
+  padding-inline: var(--space-5);
+}
+
+.btn--sm {
+  height: var(--control-height-sm);
+  padding-inline: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn__spinner {
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Botão só de ícone — mantém o alvo tocável mínimo. */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  border-radius: var(--radius-md);
+  color: var(--color-text-tertiary);
+  transition: var(--transition-colors);
+}
+
+.icon-btn:hover {
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text);
+}
+
+/* --- Campo (§9.2) -------------------------------------------------------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-field);
+}
+
+.field__control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--control-height-md);
+  padding-inline: var(--space-3);
+  background-color: var(--color-surface-field);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-tertiary);
+  transition: var(--transition-colors), box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.field__control:hover {
+  border-color: var(--color-border-strong);
+}
+
+.field__control:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus-soft);
+}
+
+.field__input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text);
+}
+
+.field__input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* Busca principal da Home (§10.1). */
+.search--hero .field__control {
+  height: var(--control-height-search);
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-lg);
+}
+
+.search--hero .field__input {
+  font-size: var(--font-size-lg);
+}
+
+/* --- Badge de status (§9.3) ---------------------------------------------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  height: var(--size-badge);
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.badge__dot {
+  width: var(--size-dot);
+  height: var(--size-dot);
+  border-radius: var(--radius-full);
+  background-color: currentColor;
+  flex-shrink: 0;
+}
+
+.badge--lg {
+  height: var(--size-badge-lg);
+  padding-inline: var(--space-3);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.badge--success {
+  color: var(--color-success);
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success-border);
+}
+
+.badge--warning {
+  color: var(--color-warning);
+  background-color: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+}
+
+.badge--danger {
+  color: var(--color-danger);
+  background-color: var(--color-danger-bg);
+  border-color: var(--color-danger-border);
+}
+
+.badge--neutral {
+  color: var(--color-neutral);
+  background-color: var(--color-neutral-bg);
+  border-color: var(--color-neutral-border);
+}
+
+.badge--muted {
+  color: var(--color-muted);
+  background-color: var(--color-muted-bg);
+  border-color: var(--color-muted-border);
+}
+
+/* --- Chip de filtro (§9.7) ----------------------------------------------- */
+
+.chips {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  height: var(--control-height-sm);
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  transition: var(--transition-colors);
+}
+
+.chip:hover {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.chip--active {
+  background-color: var(--color-accent-bg);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent-text);
+}
+
+.chip--active:hover {
+  background-color: var(--color-accent-bg-hover);
+  color: var(--color-accent-text);
+}
+
+/* Atalho da Home (§10.1) — mesma família visual do chip, sem estado ativo. */
+.shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--control-height-sm);
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  transition: var(--transition-colors);
+}
+
+.shortcut:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+/* --- Alternância grid/lista (§9.6) --------------------------------------- */
+
+.view-toggle {
+  display: inline-flex;
+  gap: var(--space-0-5);
+  padding: var(--space-0-5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.view-toggle__btn {
+  display: grid;
+  place-items: center;
+  width: var(--size-toggle-btn);
+  height: var(--size-toggle-btn);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-tertiary);
+  transition: var(--transition-colors);
+}
+
+.view-toggle__btn:hover {
+  color: var(--color-text);
+}
+
+.view-toggle__btn--active {
+  background-color: var(--color-surface-raised);
+  color: var(--color-accent-text);
+}
+
+/* --- Favorito (§10.6) ---------------------------------------------------- */
+
+.favorite {
+  display: grid;
+  place-items: center;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  margin: calc(var(--space-1) * -1) calc(var(--space-1-5) * -1) calc(var(--space-1) * -1) 0;
+  border-radius: var(--radius-md);
+  color: var(--color-text-tertiary);
+  transition: var(--transition-colors), var(--transition-transform);
+  flex-shrink: 0;
+}
+
+.favorite:hover {
+  color: var(--color-text-secondary);
+  background-color: var(--color-surface-raised);
+}
+
+.favorite--on {
+  color: var(--color-warning);
+}
+
+.favorite--on:hover {
+  color: var(--color-warning);
+}
+
+.favorite--pulse {
+  transform: scale(1.15);
+  transition-duration: var(--duration-base);
+}
+
+/* --- Trilha de localização (§10.3) --------------------------------------- */
+
+.trail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--font-size-lg);
+}
+
+.trail__level {
+  color: var(--color-text-secondary);
+  transition: color var(--duration-instant) var(--ease-standard);
+}
+
+.trail__level:hover {
+  color: var(--color-accent-text);
+}
+
+.trail__level--last {
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
+.trail__sep {
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+/* --- Empty state (§9.11) ------------------------------------------------- */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding-block: var(--space-16);
+  color: var(--color-text-secondary);
+}
+
+.empty__icon {
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-2);
+}
+
+.empty__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.empty__action {
+  margin-top: var(--space-4);
+}
+
+/* --- Skeleton (§9.12) ---------------------------------------------------- */
+
+.skeleton {
+  background-color: var(--color-surface-skeleton);
+  border-radius: var(--radius-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(var(--white-rgb) / 0.04),
+    transparent
+  );
+  animation: shimmer 1200ms infinite;
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton::after {
+  transform: translateX(-100%);
+}
+
+/* --- Alertas (§10.11) ---------------------------------------------------- */
+
+.alerts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  text-align: left;
+  color: inherit;
+  transition: var(--transition-colors);
+}
+
+.alert:hover {
+  background-color: var(--color-surface-elevated);
+  border-color: var(--color-border-strong);
+}
+
+.alert__icon {
+  flex-shrink: 0;
+}
+
+.alert__icon--danger {
+  color: var(--color-danger);
+}
+
+.alert__icon--warning {
+  color: var(--color-warning);
+}
+
+.alert__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  min-width: 0;
+  flex: 1;
+}
+
+.alert__title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.alert__meta {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* --- Breakpoints --------------------------------------------------------- */
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

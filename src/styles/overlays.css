@@ -1,0 +1,428 @@
+/* =============================================================================
+   PATRI — Overlays, formulários e telas complementares
+   ============================================================================= */
+
+/* --- Overlay: modal (desktop) / bottom sheet (mobile) (§9.9) ------------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background-color: var(--color-surface-overlay);
+  animation: overlay-in var(--duration-fast) var(--ease-out);
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.overlay__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 85vh;
+  background-color: var(--color-surface-elevated);
+  border-top-left-radius: var(--radius-2xl);
+  border-top-right-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-sheet);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: sheet-in var(--duration-slow) var(--ease-out);
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+}
+
+/* Alça visual do bottom sheet — some no desktop. */
+.overlay__grip {
+  width: 36px;
+  height: 4px;
+  margin: var(--space-3) auto var(--space-1);
+  border-radius: var(--radius-full);
+  background-color: var(--color-border-strong);
+}
+
+.overlay__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5) var(--space-3);
+}
+
+.overlay__body {
+  padding: 0 var(--space-5) var(--space-5);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-block);
+}
+
+.overlay__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+/* --- Toast (§9.8) -------------------------------------------------------- */
+
+.toasts {
+  position: fixed;
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  top: var(--space-4);
+  left: var(--container-pad);
+  right: var(--container-pad);
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  animation: toast-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.toast__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.toast__icon--sucesso {
+  color: var(--color-success);
+}
+
+.toast__icon--erro {
+  color: var(--color-danger);
+}
+
+.toast__text {
+  flex: 1;
+  font-size: var(--font-size-base);
+  min-width: 0;
+}
+
+.toast__action {
+  flex-shrink: 0;
+  color: var(--color-accent-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: color var(--duration-instant) var(--ease-standard);
+}
+
+.toast__action:hover {
+  color: var(--color-accent-text-hover);
+}
+
+/* --- Formulários (§9.2 / §10.9) ------------------------------------------ */
+
+.field__control--error {
+  border-color: var(--color-danger);
+}
+
+.field__control--area {
+  height: auto;
+  align-items: stretch;
+  padding: var(--space-3);
+}
+
+.field__control--area .field__input {
+  resize: vertical;
+  min-height: calc(var(--space-16) + var(--space-2));
+}
+
+.field__select {
+  appearance: none;
+  cursor: pointer;
+  /* O menu do select é desenhado pelo sistema: o esquema de cor precisa
+     acompanhar o tema, senão o texto some contra o fundo do menu. */
+  color-scheme: light;
+  background-color: var(--color-surface-field);
+}
+
+.field__select option,
+.field__select optgroup {
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text);
+}
+
+/* Opção-placeholder ("Selecione…", "Sem setor") fica discreta. */
+.field__select option[value=''] {
+  color: var(--color-text-tertiary);
+}
+
+.field__error {
+  font-size: var(--font-size-caption);
+  color: var(--color-danger);
+}
+
+.field__help {
+  font-size: var(--font-size-caption);
+  color: var(--color-text-tertiary);
+}
+
+.field__optional {
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-regular);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-section);
+  max-width: var(--container-narrow);
+}
+
+.form-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-block__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+.form-grid--full {
+  grid-template-columns: 1fr;
+}
+
+.form__actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  padding-top: var(--space-2);
+}
+
+.photo-field {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.photo-field__preview {
+  display: grid;
+  place-items: center;
+  width: 160px;
+  aspect-ratio: var(--photo-aspect-card);
+  background-color: var(--color-surface-photo);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-tertiary);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.photo-field__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-field__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.move__question {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.summary__row {
+  display: grid;
+  grid-template-columns: var(--summary-label-width) 1fr;
+  gap: var(--space-4);
+  align-items: baseline;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.summary__row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary__value {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  min-width: 0;
+}
+
+.setting__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  max-width: var(--max-line-length);
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--touch-target-min);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  transition: var(--transition-colors);
+}
+
+.menu-list__item:hover {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.menu-list__item + .menu-list__item {
+  box-shadow: 0 -1px 0 var(--color-border-subtle);
+}
+
+.menu-list__item:hover + .menu-list__item {
+  box-shadow: none;
+}
+
+/* --- Breakpoints ---------------------------------------------------------- */
+
+@media (min-width: 768px) {
+  .overlay {
+    align-items: center;
+    padding: var(--space-6);
+  }
+
+  .overlay__panel {
+    max-width: var(--modal-width);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    max-height: 82vh;
+  }
+
+  .overlay__panel--wide {
+    max-width: var(--modal-width-wide);
+  }
+
+  .overlay__grip {
+    display: none;
+  }
+
+  .overlay__header {
+    padding-top: var(--space-5);
+  }
+
+  .toasts {
+    top: auto;
+    left: auto;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    width: var(--toast-width);
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-grid--full {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .local-children {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* --- Login e carregamento inicial ---------------------------------------- */
+
+.app-loading {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+/* Servidor sem resposta ao abrir o sistema (sessão mantida, reconectando). */
+.app-offline {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: var(--space-4);
+  background-color: var(--color-bg);
+}
+
+.login {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: var(--container-pad);
+  background-color: var(--color-bg);
+}
+
+.login__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 380px;
+  padding: var(--space-8) var(--space-6);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+.login__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.login__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
